@@ -21,6 +21,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        try {
+            post("google.com","{}");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     void post(String url, String json) throws IOException {
