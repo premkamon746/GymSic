@@ -1,7 +1,15 @@
 package com.gymsic.kara.gymsic;
 
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import java.io.IOException;
 
@@ -21,11 +29,55 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        try {
-            post("google.com","{}");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+
+
+
+        Button bt = (Button)findViewById(R.id.button);
+        bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BlankFragment fmt = new BlankFragment();
+
+                // In case this activity was started with special instructions from an
+                // Intent, pass the Intent's extras to the fragment as arguments
+                fmt.setArguments(getIntent().getExtras());
+
+                // Add the fragment to the 'fragment_container' FrameLayout
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.fragment, fmt).commit();
+            }
+        });
+
+
+
+        EditText ed = (EditText)findViewById(R.id.search);
+        ed.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //Log.d("LOGER" , s.length()+""); // show the count of the Text in the TextView
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                try {
+                    post("http://192.168.1.153:3000/","{}");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+
+        });
+
     }
 
     void post(String url, String json) throws IOException {
@@ -50,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 String res = response.body().string();
+                Log.d("log_debug","res "+res);
             }
         });
     }
