@@ -1,7 +1,8 @@
 package com.gymsic.kara.gymsic;
 
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,7 +12,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.gymsic.kara.gymsic.data.Song;
+
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -30,27 +38,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
-
-        Button bt = (Button)findViewById(R.id.button);
-        bt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BlankFragment fmt = new BlankFragment();
-
-                // In case this activity was started with special instructions from an
-                // Intent, pass the Intent's extras to the fragment as arguments
-                fmt.setArguments(getIntent().getExtras());
-
-                // Add the fragment to the 'fragment_container' FrameLayout
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.fragment, fmt).commit();
-            }
-        });
-
-
-
         EditText ed = (EditText)findViewById(R.id.search);
         ed.addTextChangedListener(new TextWatcher() {
             @Override
@@ -67,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    post("http://192.168.1.153:3000/","{}");
+                    post("http://192.168.1.33:3000/","{}");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -102,7 +89,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 String res = response.body().string();
-                Log.d("log_debug","res "+res);
+                //Log.d("log_debug","res "+res);
+                Gson gson = new Gson();
+
+                Type listType = new TypeToken<ArrayList<Song>>(){}.getType();
+                ArrayList<Song> songs = gson.fromJson(res, listType);
+
+                final SearchItemFragment b =  SearchItemFragment.newInstance(songs);
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                ft.replace(R.id.fragment_place,b);
+                ft.commit();
+                //Log.d("log_debug","res "+song.get);
             }
         });
     }
