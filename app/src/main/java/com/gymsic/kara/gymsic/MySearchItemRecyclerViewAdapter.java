@@ -38,7 +38,7 @@ public class MySearchItemRecyclerViewAdapter extends RecyclerView.Adapter<MySear
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mSongs.get(position);
-        holder.song.setText(mSongs.get(position).getName()+ " - "+mSongs.get(position).getArtist());
+        holder.song.setText(mSongs.get(position).getTitle()+ " - "+mSongs.get(position).getArtist());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

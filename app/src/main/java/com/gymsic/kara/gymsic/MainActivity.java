@@ -54,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    post("http://192.168.1.33:3000/","{}");
+                    String search = s.toString();
+                    post("http://192.168.1.33:3000/","{search:"+search+"}");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
