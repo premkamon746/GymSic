@@ -31,7 +31,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity implements SongFragment.OnListFragmentInteractionListener {
 
     OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity  {
                 Type listType = new TypeToken<ArrayList<Song>>(){}.getType();
                 ArrayList<Song> songs = gson.fromJson(res, listType);
 
-                final SearchItemFragment b =  SearchItemFragment.newInstance(songs);
+                final SongFragment b =  SongFragment.newInstance(songs);
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
@@ -124,5 +124,10 @@ public class MainActivity extends AppCompatActivity  {
     // Used to load the 'native-lib' library on application startup.
     static {
         System.loadLibrary("native-lib");
+    }
+
+    @Override
+    public void onListFragmentInteraction(Song item) {
+
     }
 }
