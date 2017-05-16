@@ -31,7 +31,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
 
     OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    post("http://192.168.1.153:3000/",s.toString());
+                    post("http://192.168.1.33:3000/",s.toString());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
