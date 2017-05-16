@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gymsic.kara.gymsic.data.Song;
-import com.gymsic.kara.gymsic.dummy.DummyContent;
-import com.gymsic.kara.gymsic.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
 import java.util.List;

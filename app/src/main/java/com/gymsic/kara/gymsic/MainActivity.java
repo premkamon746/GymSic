@@ -23,7 +23,9 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -54,13 +56,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    String search = s.toString();
-                    post("http://192.168.1.33:3000/","{search:"+search+"}");
+                    post("http://192.168.1.153:3000/",s.toString());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-
             }
 
 
@@ -68,8 +67,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    void post(String url, String json) throws IOException {
-        RequestBody body = RequestBody.create(JSON, json);
+    void post(String url, String search) throws IOException {
+        //RequestBody body = RequestBody.create(JSON, json);
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        formBuilder.add("search", search);
+        RequestBody body = formBuilder.build();
+
+//        RequestBody body = new MultipartBody.Builder()
+//                .setType(MultipartBody.FORM)
+//                .addFormDataPart("search", search)
+//                .build();
+
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
@@ -78,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(final Call call, IOException e) {
                 // Error
-
+                Log.d("log_debug","res "+e.getMessage());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -90,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 String res = response.body().string();
-                //Log.d("log_debug","res "+res);
+                Log.d("log_debug","res "+res);
                 Gson gson = new Gson();
 
                 Type listType = new TypeToken<ArrayList<Song>>(){}.getType();
