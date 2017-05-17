@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements SongFragment.OnLi
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    post("http://192.168.1.33:3000/",s.toString());
+                    post("http://192.168.1.153:3000/",s.toString());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

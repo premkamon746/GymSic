@@ -9,10 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.gymsic.kara.gymsic.adapter.MySongRecyclerViewAdapter;
 import com.gymsic.kara.gymsic.data.Song;
 import com.gymsic.kara.gymsic.listener.RecyclerItemClickListener;
+import com.gymsic.kara.gymsic.module.Download;
 
 import java.util.ArrayList;
 
@@ -65,7 +67,9 @@ public class SongFragment extends Fragment {
                     new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
                         @Override public void onItemClick(View view, int position) {
                             // TODO Handle item click
-                            Log.d("position click : ", String.valueOf(position));
+                            ProgressBar pb = (ProgressBar)view.findViewById(R.id.progressBar);
+                            new Download(getActivity(),pb).execute("http://192.168.1.153/mp3db/"+songs.get(position).getFilename());
+                            Log.d("position click : ", songs.get(position).getFilename());
                         }
                     })
             );

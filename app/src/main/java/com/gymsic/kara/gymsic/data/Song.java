@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by premkamon on 14/5/2560.
  */
 
-public class Song {
+public class Song implements Serializable {
     private String _id;
     private String title;
     private String artist;
