@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,10 +27,12 @@ public class Download extends AsyncTask<String, Integer, String> {
 
     Context context;
     ProgressBar pb;
+    String song;
 
-    public Download(Context context,ProgressBar pb){
+    public Download(Context context,ProgressBar pb,String song){
         this.context = context;
         this.pb = pb;
+        this.song = song;
         pb.setVisibility(View.VISIBLE);
     }
 
@@ -60,9 +63,25 @@ public class Download extends AsyncTask<String, Integer, String> {
             // input stream to read file - with 8k buffer
             InputStream input = new BufferedInputStream(url.openStream(), 8192);
 
-            // Output stream to write file
 
-            OutputStream output = new FileOutputStream(root+"/test.mp3");
+            String directory = context.getExternalCacheDir()+ "/gymsic/"+song;
+            File folder = new File(context.getExternalCacheDir(), "gymsic");
+            if (!folder.exists()) {
+                boolean success = folder.mkdir();
+                if (success) {
+                    // Do something on success
+                    Log.d("debug","create success.");
+                } else {
+                    // Do something else on failure
+                    Log.d("debug","create failure.");
+                }
+            }else{
+                Log.d("debug","file already exits.");
+            }
+
+            OutputStream output = new FileOutputStream(directory);
+
+
             byte data[] = new byte[1024];
 
             long total = 0;

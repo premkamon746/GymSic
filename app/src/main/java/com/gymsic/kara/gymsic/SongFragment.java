@@ -3,6 +3,7 @@ package com.gymsic.kara.gymsic;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -68,13 +69,19 @@ public class SongFragment extends Fragment {
                         @Override public void onItemClick(View view, int position) {
                             // TODO Handle item click
                             ProgressBar pb = (ProgressBar)view.findViewById(R.id.progressBar);
-                            new Download(getActivity(),pb).execute("http://192.168.1.153/mp3db/"+songs.get(position).getFilename());
+                            new Download(getActivity(),pb,songs.get(position).getFilename()).execute("http://192.168.1.153/mp3db/"+songs.get(position).getFilename());
                             Log.d("position click : ", songs.get(position).getFilename());
                         }
                     })
             );
 
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+            recyclerView.setLayoutManager(layoutManager);
+
+            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                    layoutManager.getOrientation());
+            recyclerView.addItemDecoration(dividerItemDecoration);
+
             recyclerView.setAdapter(new MySongRecyclerViewAdapter(songs, mListener));
         }
         return view;

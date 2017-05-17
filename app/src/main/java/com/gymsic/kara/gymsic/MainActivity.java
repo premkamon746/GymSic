@@ -3,6 +3,7 @@ package com.gymsic.kara.gymsic;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.gymsic.kara.gymsic.data.Song;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -41,6 +43,12 @@ public class MainActivity extends AppCompatActivity implements SongFragment.OnLi
         setContentView(R.layout.activity_main);
 
         EditText ed = (EditText)findViewById(R.id.search);
+
+
+
+
+
+
         ed.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
