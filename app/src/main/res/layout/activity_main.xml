@@ -5,8 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-
-    <EditText
+    <SearchView
         android:id="@+id/search"
         android:layout_width="368dp"
         android:layout_height="wrap_content"
@@ -14,8 +13,6 @@
         android:layout_marginRight="8dp"
         android:ems="10"
         android:inputType="textPersonName" />
-
-
 
     <RelativeLayout
         android:id="@+id/fragment_place"

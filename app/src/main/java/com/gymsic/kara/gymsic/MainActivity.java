@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SearchView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -42,35 +43,27 @@ public class MainActivity extends AppCompatActivity implements SongFragment.OnLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        EditText ed = (EditText)findViewById(R.id.search);
+        final SearchView searchView = (SearchView)findViewById(R.id.search);
 
 
 
-
-
-
-        ed.addTextChangedListener(new TextWatcher() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+            public boolean onQueryTextSubmit(String query) {
+                return false;
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //Log.d("LOGER" , s.length()+""); // show the count of the Text in the TextView
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                try {
-                    post("http://192.168.1.153:3000/",s.toString());
-                } catch (IOException e) {
-                    e.printStackTrace();
+            public boolean onQueryTextChange(String newText) {
+                if(newText.length() >=3 ) {
+                    try {
+                        post("http://192.168.1.33:3000/", newText.toString());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
+                return false;
             }
-
-
         });
 
     }
