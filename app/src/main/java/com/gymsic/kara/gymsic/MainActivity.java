@@ -4,6 +4,7 @@ package com.gymsic.kara.gymsic;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Environment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -17,6 +18,10 @@ import android.widget.SearchView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.gymsic.kara.gymsic.data.Song;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,12 +43,29 @@ public class MainActivity extends AppCompatActivity implements SongFragment.OnLi
 
     OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    public String server = "http://192.168.1.153:3000/";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         final SearchView searchView = (SearchView)findViewById(R.id.search);
+        searchView.setQueryHint(getString(R.string.find_song));
+
+        searchView.setIconified(false);
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                try {
+                    post(server, "");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+        });
 
 
 
@@ -55,16 +77,39 @@ public class MainActivity extends AppCompatActivity implements SongFragment.OnLi
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if(newText.length() >=3 ) {
-                    try {
-                        post("http://192.168.1.33:3000/", newText.toString());
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                try {
+                    if(newText.length() >=3 ) {
+                        post(server, newText.toString());
+
+                    }else{
+                        post(server, "");
+                        searchView.setIconified(false);
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
                 return false;
             }
         });
+
+        FragmentPagerItems pages = new FragmentPagerItems(this);
+
+        pages.add(FragmentPagerItem.of(getString(R.string.my_song), PageFragment.class, PageFragment.arguments("param:page1")));
+        pages.add(FragmentPagerItem.of("title2", PageFragment.class, PageFragment.arguments("param:page2")));
+        pages.add(FragmentPagerItem.of("title3", PageFragment.class, PageFragment.arguments("param:page3")));
+
+
+        final SmartTabLayout viewPagerTab = (SmartTabLayout) findViewById(R.id.viewpagertab);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+
+        //viewPagerTab.setCustomTabView(this);
+        viewPagerTab.setViewPager(viewPager);
+
+        FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
+                getSupportFragmentManager(), pages);
+
+        viewPager.setAdapter(adapter);
+        viewPagerTab.setViewPager(viewPager);
 
     }
 
