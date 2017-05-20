@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="searchHintColor">#e4e6e8</color>
+
+    <color name="colorGray">#e8e8e8</color>
+    <color name="colorText">#dad6d6</color>
 </resources>

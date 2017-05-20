@@ -1,6 +1,8 @@
 package com.gymsic.kara.gymsic;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -10,12 +12,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.gymsic.kara.gymsic.adapter.MySongRecyclerViewAdapter;
-import com.gymsic.kara.gymsic.data.Song;
-import com.gymsic.kara.gymsic.listener.RecyclerItemClickListener;
-import com.gymsic.kara.gymsic.module.Download;
+import com.gymsic.kara.gymsic.Adapter.MySongRecyclerViewAdapter;
+import com.gymsic.kara.gymsic.Interface.OnTaskComplete;
+import com.gymsic.kara.gymsic.Model.Song;
+import com.gymsic.kara.gymsic.Listener.RecyclerItemClickListener;
+import com.gymsic.kara.gymsic.Plugin.Download;
+import com.gymsic.kara.gymsic.Plugin.Playlist;
 
 import java.util.ArrayList;
 
@@ -29,6 +34,7 @@ public class SongFragment extends Fragment {
 
     private OnListFragmentInteractionListener mListener;
     ArrayList<Song> songs;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -58,19 +64,46 @@ public class SongFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_song_list, container, false);
+         View view = inflater.inflate(R.layout.fragment_song_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
+            final LinearLayout layout = (LinearLayout)getActivity().findViewById(R.id.playListHead);
+
+            //get haft
+            final int heightDp = getResources().getDisplayMetrics().heightPixels / 2;
+
             recyclerView.addOnItemTouchListener(
                     new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
                         @Override public void onItemClick(View view, int position) {
                             // TODO Handle item click
                             ProgressBar pb = (ProgressBar)view.findViewById(R.id.progressBar);
-                            new Download(getActivity(),pb,songs.get(position).getFilename()).execute("http://192.168.1.153/mp3db/"+songs.get(position).getFilename());
-                            Log.d("position click : ", songs.get(position).getFilename());
+
+                            OnTaskComplete cmp = new OnTaskComplete() {
+                                @Override
+                                public void onTaskCompleted(Song song) {
+                                    Playlist pl = new Playlist(getActivity());
+                                    ArrayList<Song> songs = pl.get();
+
+                                    if(songs == null){
+                                        songs = new ArrayList<Song>();
+                                    }
+                                    songs.add(song);
+                                    pl.set(songs);
+
+                                    layout.getLayoutParams().height = heightDp;
+                                    final PlaylistFragment b =  PlaylistFragment.newInstance(songs);
+                                    FragmentManager fm = getFragmentManager();
+                                    FragmentTransaction ft = fm.beginTransaction();
+                                    ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                                    ft.replace(R.id.fragment_playlist,b);
+                                    ft.commit();
+                                }
+                            };
+                            new Download(getActivity(),pb,songs.get(position),cmp).execute("http://192.168.1.33/mp3db/"+songs.get(position).getFilename());
+                            //Log.d("position click : ", songs.get(position).getFilename());
                         }
                     })
             );

@@ -1,4 +1,4 @@
-package com.gymsic.kara.gymsic.data;
+package com.gymsic.kara.gymsic.Model;
 
 import java.io.Serializable;
 
@@ -12,6 +12,10 @@ public class Song implements Serializable {
     private String artist;
     private String duration;
     private String filename;
+    private String cover;
+    private String sort;
+
+
 
     public String getTitle() {
         return title;
@@ -28,7 +32,6 @@ public class Song implements Serializable {
     public void setFilename(String filename) {
         this.filename = filename;
     }
-
 
     public String get_id() {
         return _id;
@@ -52,5 +55,20 @@ public class Song implements Serializable {
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
     }
 }

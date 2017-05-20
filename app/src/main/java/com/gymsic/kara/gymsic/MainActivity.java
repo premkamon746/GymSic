@@ -3,37 +3,23 @@ package com.gymsic.kara.gymsic;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.os.Environment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.SearchView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.gymsic.kara.gymsic.data.Song;
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
+import com.gymsic.kara.gymsic.Model.Song;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -43,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements SongFragment.OnLi
 
     OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    public String server = "http://192.168.1.153:3000/";
+    public String server = "http://192.168.1.33:3000/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,26 +77,6 @@ public class MainActivity extends AppCompatActivity implements SongFragment.OnLi
                 return false;
             }
         });
-
-        FragmentPagerItems pages = new FragmentPagerItems(this);
-
-        pages.add(FragmentPagerItem.of(getString(R.string.my_song), PageFragment.class, PageFragment.arguments("param:page1")));
-        pages.add(FragmentPagerItem.of("title2", PageFragment.class, PageFragment.arguments("param:page2")));
-        pages.add(FragmentPagerItem.of("title3", PageFragment.class, PageFragment.arguments("param:page3")));
-
-
-        final SmartTabLayout viewPagerTab = (SmartTabLayout) findViewById(R.id.viewpagertab);
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-
-        //viewPagerTab.setCustomTabView(this);
-        viewPagerTab.setViewPager(viewPager);
-
-        FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
-                getSupportFragmentManager(), pages);
-
-        viewPager.setAdapter(adapter);
-        viewPagerTab.setViewPager(viewPager);
-
     }
 
     void post(String url, String search) throws IOException {

@@ -1,11 +1,18 @@
-package com.gymsic.kara.gymsic.module;
+package com.gymsic.kara.gymsic.Plugin;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+
+import com.gymsic.kara.gymsic.Interface.OnTaskComplete;
+import com.gymsic.kara.gymsic.Model.Song;
+import com.gymsic.kara.gymsic.R;
+import com.gymsic.kara.gymsic.SongFragment;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -14,6 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 /**
  * Created by premkamon on 17/5/2560.
@@ -27,12 +35,14 @@ public class Download extends AsyncTask<String, Integer, String> {
 
     Context context;
     ProgressBar pb;
-    String song;
+    Song song;
+    OnTaskComplete comp;
 
-    public Download(Context context,ProgressBar pb,String song){
+    public Download(Context context,ProgressBar pb,Song song,OnTaskComplete camp){
         this.context = context;
         this.pb = pb;
         this.song = song;
+        this.comp = camp;
         pb.setVisibility(View.VISIBLE);
     }
 
@@ -64,7 +74,7 @@ public class Download extends AsyncTask<String, Integer, String> {
             InputStream input = new BufferedInputStream(url.openStream(), 8192);
 
 
-            String directory = context.getExternalCacheDir()+ "/gymsic/"+song;
+            String directory = context.getExternalCacheDir()+ "/gymsic/"+song.getFilename();
             File folder = new File(context.getExternalCacheDir(), "gymsic");
             if (!folder.exists()) {
                 boolean success = folder.mkdir();
@@ -111,8 +121,9 @@ public class Download extends AsyncTask<String, Integer, String> {
      * **/
     @Override
     protected void onPostExecute(String file_url) {
-        System.out.println("Downloaded");
+        //System.out.println("Downloaded");
         pb.setVisibility(View.INVISIBLE);
+        comp.onTaskCompleted(song);
     }
 
     @Override

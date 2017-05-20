@@ -1,4 +1,4 @@
-package com.gymsic.kara.gymsic.listener;
+package com.gymsic.kara.gymsic.Listener;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

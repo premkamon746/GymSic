@@ -1,4 +1,4 @@
-package com.gymsic.kara.gymsic.adapter;
+package com.gymsic.kara.gymsic.Adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -7,19 +7,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.gymsic.kara.gymsic.Model.Song;
+import com.gymsic.kara.gymsic.PlaylistFragment;
 import com.gymsic.kara.gymsic.R;
-import com.gymsic.kara.gymsic.SongFragment.OnListFragmentInteractionListener;
-import com.gymsic.kara.gymsic.data.Song;
+import com.gymsic.kara.gymsic.SongFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
-public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecyclerViewAdapter.ViewHolder> {
+public class MyPlaylistRecyclerViewAdapter extends RecyclerView.Adapter<MyPlaylistRecyclerViewAdapter.ViewHolder> {
+
 
     private final List<Song> mSongs;
-    private final OnListFragmentInteractionListener mListener;
+    private final PlaylistFragment.OnListFragmentInteractionListener mListener;
 
-    public MySongRecyclerViewAdapter(List<Song> items, OnListFragmentInteractionListener listener) {
+    public MyPlaylistRecyclerViewAdapter(List<Song> items, PlaylistFragment.OnListFragmentInteractionListener listener) {
         mSongs = items;
         mListener = listener;
     }
@@ -27,12 +30,12 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_song, parent, false);
+                .inflate(R.layout.fragment_playlist, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final MyPlaylistRecyclerViewAdapter.ViewHolder holder, int position) {
         holder.mItem = mSongs.get(position);
         holder.mNameView.setText(mSongs.get(position).getTitle()+ " - " + mSongs.get(position).getArtist() );
 
@@ -61,7 +64,6 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            Log.d("view : ","mview initailize");
             mNameView = (TextView) view.findViewById(R.id.song);
         }
 
