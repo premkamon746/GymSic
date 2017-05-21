@@ -3,8 +3,10 @@ package com.gymsic.kara.gymsic.Plugin;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.gymsic.kara.gymsic.Model.Song;
 
 import java.util.ArrayList;
@@ -34,7 +36,8 @@ public class Playlist {
     public  ArrayList<Song> get(){
         Gson gson = new Gson();
         String json = mPrefs.getString("MySong", "");
-        ArrayList<Song> mySong = gson.fromJson(json, new ArrayList<Song>(){}.getClass());
+        Log.d("debug","json get : "+json);
+        ArrayList<Song> mySong = gson.fromJson(json, new TypeToken<ArrayList<Song>>() {}.getType());
         return  mySong;
     }
 }

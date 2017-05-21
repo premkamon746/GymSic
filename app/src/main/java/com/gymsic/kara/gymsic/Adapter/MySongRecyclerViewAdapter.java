@@ -62,7 +62,6 @@ public class MySongRecyclerViewAdapter extends RecyclerView.Adapter<MySongRecycl
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            Log.d("view : ","mview initailize");
             mNameView = (TextView) view.findViewById(R.id.song);
             view.setClickable(true);
         }
