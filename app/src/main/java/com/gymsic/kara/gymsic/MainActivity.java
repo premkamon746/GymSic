@@ -3,10 +3,16 @@ package com.gymsic.kara.gymsic;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -25,16 +31,28 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity implements SongFragment.OnListFragmentInteractionListener {
+import android.view.ViewGroup.LayoutParams;
+
+public class MainActivity extends AppCompatActivity
+        implements SongFragment.OnListFragmentInteractionListener
+        , View.OnClickListener{
 
     OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     public String server = "http://192.168.1.33:3000/";
+    private TextView playlistHead;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        playlistHead = (TextView)findViewById(R.id.playList);
+        playlistHead.setOnClickListener(this);
+
+
 
         final SearchView searchView = (SearchView)findViewById(R.id.search);
         searchView.setQueryHint(getString(R.string.find_song));
@@ -141,5 +159,21 @@ public class MainActivity extends AppCompatActivity implements SongFragment.OnLi
     @Override
     public void onListFragmentInteraction(Song item) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.playList){
+            final LinearLayout layout = (LinearLayout)findViewById(R.id.playListHead);
+            LayoutParams params = layout.getLayoutParams();
+            int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
+            if(params.height >height) {
+                params.height = height;
+            }else{
+                int heightDp = getResources().getDisplayMetrics().heightPixels / 2;
+                params.height = heightDp;
+            }
+            layout.setLayoutParams(params);
+        }
     }
 }
