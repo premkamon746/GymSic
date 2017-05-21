@@ -86,9 +86,8 @@ public class SongFragment extends Fragment {
                                 public void onTaskCompleted(Song song) {
                                     Playlist pl = new Playlist(getActivity());
                                     ArrayList<Song> songs = pl.get();
-                                    Log.d("sharePref.",songs.toString());
-                                    if(songs == null){
 
+                                    if(songs == null){
                                         songs = new ArrayList<Song>();
                                     }
                                     songs.add(song);

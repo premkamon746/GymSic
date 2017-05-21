@@ -36,7 +36,7 @@ public class Playlist {
     public  ArrayList<Song> get(){
         Gson gson = new Gson();
         String json = mPrefs.getString("MySong", "");
-        Log.d("debug","json get : "+json);
+
         ArrayList<Song> mySong = gson.fromJson(json, new TypeToken<ArrayList<Song>>() {}.getType());
         return  mySong;
     }
