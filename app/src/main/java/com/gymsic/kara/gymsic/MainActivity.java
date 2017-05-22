@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity
 
     OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    public String server = "http://192.168.1.33:3000/";
+    public String server = "http://192.168.1.153:3000/";
     private TextView playlistHead;
 
 
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onQueryTextChange(String newText) {
                 try {
-                    if(newText.length() >=3 ) {
+                    if(newText.length() >=2 ) {
                         post(server, newText.toString());
 
                     }else{

@@ -1,17 +1,26 @@
 package com.gymsic.kara.gymsic;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.gymsic.kara.gymsic.Adapter.MyPlaylistRecyclerViewAdapter;
+import com.gymsic.kara.gymsic.Interface.OnTaskComplete;
+import com.gymsic.kara.gymsic.Listener.RecyclerItemClickListener;
 import com.gymsic.kara.gymsic.Model.Song;
+import com.gymsic.kara.gymsic.Plugin.Download;
+import com.gymsic.kara.gymsic.Plugin.Player;
+import com.gymsic.kara.gymsic.Plugin.Playlist;
 
 import java.util.ArrayList;
 
@@ -28,7 +37,7 @@ public class PlaylistFragment extends Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     ArrayList<Song> songs;
-
+    Player player = new Player();
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -64,11 +73,19 @@ public class PlaylistFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
+
+            recyclerView.addOnItemTouchListener(
+                    new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
+                        @Override public void onItemClick(View view, int position) {
+                            Log.d("log position player ","position : "+position);
+                            String song = getActivity().getExternalCacheDir()+ "/gymsic/"+songs.get(position).getFilename();
+
+                            //player.play(song);
+                        }
+                    })
+            );
+
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
             recyclerView.setAdapter(new MyPlaylistRecyclerViewAdapter(songs, mListener));
         }
         return view;

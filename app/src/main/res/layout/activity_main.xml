@@ -50,6 +50,13 @@
             android:gravity="center"
             android:text="@string/play_list" />
 
+
+        <Button
+            android:id="@+id/createPlaylist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="@string/create_play_list" />
+
         <RelativeLayout
             android:id="@+id/fragment_playlist"
             android:layout_width="match_parent"
