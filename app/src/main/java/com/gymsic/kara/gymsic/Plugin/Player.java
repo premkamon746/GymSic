@@ -23,11 +23,9 @@ public class Player {
 
     public void play(String song){
         try {
-            mediaPlayer.stop();
+
+            mediaPlayer.reset();
             mediaPlayer.setDataSource(song);
-
-            mediaPlayer.prepareAsync();
-
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
@@ -35,8 +33,7 @@ public class Player {
                     mp.start();
                 }
             });
-
-            mediaPlayer.start();
+            mediaPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();
         }

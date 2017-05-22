@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +23,8 @@ import com.gymsic.kara.gymsic.Plugin.Download;
 import com.gymsic.kara.gymsic.Plugin.Player;
 import com.gymsic.kara.gymsic.Plugin.Playlist;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -37,7 +40,8 @@ public class PlaylistFragment extends Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     ArrayList<Song> songs;
-    Player player = new Player();
+    //Player player = new Player();
+    MediaPlayer  mediaPlayer;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -64,6 +68,10 @@ public class PlaylistFragment extends Fragment {
         }
     }
 
+    public void setMediaPlayer(MediaPlayer  mediaPlayer){
+        this.mediaPlayer = mediaPlayer;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,11 +84,23 @@ public class PlaylistFragment extends Fragment {
 
             recyclerView.addOnItemTouchListener(
                     new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
-                        @Override public void onItemClick(View view, int position) {
+                        @Override public void onItemClick(View view,final int position) {
                             Log.d("log position player ","position : "+position);
                             String song = getActivity().getExternalCacheDir()+ "/gymsic/"+songs.get(position).getFilename();
 
                             //player.play(song);
+
+                            playSong(mediaPlayer,position);
+
+                            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
+                                @Override
+                                public void onCompletion(MediaPlayer mp) {
+                                    playSong(mp,position+1);
+                                }
+                            });
+
+
+
                         }
                     })
             );
@@ -89,6 +109,31 @@ public class PlaylistFragment extends Fragment {
             recyclerView.setAdapter(new MyPlaylistRecyclerViewAdapter(songs, mListener));
         }
         return view;
+    }
+
+    public void playSong(MediaPlayer mp, int position){
+        if(songs.size() > position) {
+            String song = getActivity().getExternalCacheDir() + "/gymsic/" + songs.get(position).getFilename();
+            File file = new File(song);
+            if (file.exists()) {
+                mp.reset();
+                try {
+                    mp.setDataSource(song);
+                    mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mp) {
+
+                            mp.start();
+                        }
+                    });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                mp.prepareAsync();
+
+            }
+        }
     }
 
 

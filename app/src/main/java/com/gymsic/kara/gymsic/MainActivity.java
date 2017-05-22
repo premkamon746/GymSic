@@ -3,6 +3,7 @@ package com.gymsic.kara.gymsic;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,12 +12,17 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.gymsic.kara.gymsic.Interface.OnRecycleViewClick;
+import com.gymsic.kara.gymsic.Interface.OnTaskComplete;
 import com.gymsic.kara.gymsic.Model.Song;
+import com.gymsic.kara.gymsic.Plugin.Download;
+import com.gymsic.kara.gymsic.Plugin.Playlist;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -39,8 +45,11 @@ public class MainActivity extends AppCompatActivity
 
     OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    public String server = "http://192.168.1.153:3000/";
+    public String server = "http://192.168.1.33:3000/";
     private TextView playlistHead;
+    MediaPlayer mediaPlayer = new MediaPlayer();
+    final SongFragment songFram =  new SongFragment();;
+    OnRecycleViewClick onRecVwClick;
 
 
 
@@ -49,8 +58,11 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        loadDefaultData();
         playlistHead = (TextView)findViewById(R.id.playList);
         playlistHead.setOnClickListener(this);
+
+        songFram.setOnRecycleViewClick(onRecVwClick);
 
 
 
@@ -134,11 +146,11 @@ public class MainActivity extends AppCompatActivity
                 Type listType = new TypeToken<ArrayList<Song>>(){}.getType();
                 ArrayList<Song> songs = gson.fromJson(res, listType);
 
-                final SongFragment b =  SongFragment.newInstance(songs);
+                songFram.setSong(songs);
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-                ft.replace(R.id.fragment_place,b);
+                ft.replace(R.id.fragment_place,songFram);
                 ft.commit();
                 //Log.d("log_debug","res "+song.get);
             }
@@ -175,5 +187,66 @@ public class MainActivity extends AppCompatActivity
             }
             layout.setLayoutParams(params);
         }
+    }
+
+
+    public void loadDefaultData(){
+        //cmp = setOnDownloadSongSuccess();
+        onRecVwClick = setOnSearchClick();
+        loadDefaultPlayList();
+    }
+
+    public void loadDefaultPlayList(){
+        Playlist pl = new Playlist(this);
+        ArrayList<Song> songs = pl.get();
+
+        final PlaylistFragment b =  PlaylistFragment.newInstance(songs);
+        b.setMediaPlayer(mediaPlayer);
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+        ft.replace(R.id.fragment_playlist,b);
+        ft.commit();
+    }
+
+    public OnTaskComplete setOnDownloadSongSuccess(){
+        final LinearLayout layout = (LinearLayout)findViewById(R.id.playListHead);
+        //get haft
+        final int heightDp = getResources().getDisplayMetrics().heightPixels / 2;
+
+        return new OnTaskComplete() {
+            @Override
+            public void onTaskCompleted(Song song) {
+                Playlist pl = new Playlist(MainActivity.this);
+                ArrayList<Song> songs = pl.get();
+
+                if(songs == null){
+                    songs = new ArrayList<Song>();
+                }
+                songs.add(song);
+                pl.set(songs);
+
+                layout.getLayoutParams().height = heightDp;
+                final PlaylistFragment b =  PlaylistFragment.newInstance(songs);
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                ft.replace(R.id.fragment_playlist,b);
+                ft.commit();
+            }
+        };
+
+    }
+
+    public OnRecycleViewClick setOnSearchClick(){
+        return new OnRecycleViewClick(){
+                @Override
+                public void onRecycleViewClick(View view,int position,ArrayList<Song> songs){
+                    ProgressBar pb = (ProgressBar)view.findViewById(R.id.progressBar);
+                    OnTaskComplete cmp = setOnDownloadSongSuccess();
+                    new Download(MainActivity.this,pb,songs.get(position),cmp).execute("http://192.168.1.33/mp3db/"+songs.get(position).getFilename());
+                }
+        };
+
     }
 }

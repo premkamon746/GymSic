@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.gymsic.kara.gymsic.Adapter.MySongRecyclerViewAdapter;
+import com.gymsic.kara.gymsic.Interface.OnRecycleViewClick;
 import com.gymsic.kara.gymsic.Interface.OnTaskComplete;
 import com.gymsic.kara.gymsic.Model.Song;
 import com.gymsic.kara.gymsic.Listener.RecyclerItemClickListener;
@@ -34,6 +35,7 @@ public class SongFragment extends Fragment {
 
     private OnListFragmentInteractionListener mListener;
     ArrayList<Song> songs;
+    OnRecycleViewClick onRecVwClick;
 
 
     /**
@@ -51,6 +53,14 @@ public class SongFragment extends Fragment {
         args.putSerializable("songs", songs);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public void setOnRecycleViewClick(OnRecycleViewClick onRecVwClick){
+        this.onRecVwClick =  onRecVwClick;
+    }
+
+    public void setSong(ArrayList<Song> songs){
+        this.songs =  songs;
     }
 
     @Override
@@ -79,30 +89,9 @@ public class SongFragment extends Fragment {
                     new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
                         @Override public void onItemClick(View view, int position) {
                             // TODO Handle item click
-                            ProgressBar pb = (ProgressBar)view.findViewById(R.id.progressBar);
 
-                            OnTaskComplete cmp = new OnTaskComplete() {
-                                @Override
-                                public void onTaskCompleted(Song song) {
-                                    Playlist pl = new Playlist(getActivity());
-                                    ArrayList<Song> songs = pl.get();
+                            onRecVwClick.onRecycleViewClick(view,position,songs);
 
-                                    if(songs == null){
-                                        songs = new ArrayList<Song>();
-                                    }
-                                    songs.add(song);
-                                    pl.set(songs);
-
-                                    layout.getLayoutParams().height = heightDp;
-                                    final PlaylistFragment b =  PlaylistFragment.newInstance(songs);
-                                    FragmentManager fm = getFragmentManager();
-                                    FragmentTransaction ft = fm.beginTransaction();
-                                    ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-                                    ft.replace(R.id.fragment_playlist,b);
-                                    ft.commit();
-                                }
-                            };
-                            new Download(getActivity(),pb,songs.get(position),cmp).execute("http://192.168.1.153/mp3db/"+songs.get(position).getFilename());
                             //Log.d("position click : ", songs.get(position).getFilename());
                         }
                     })
