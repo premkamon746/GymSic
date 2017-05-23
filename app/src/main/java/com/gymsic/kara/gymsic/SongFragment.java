@@ -66,9 +66,10 @@ public class SongFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            songs = (ArrayList<Song>)getArguments().getSerializable("songs");
-        }
+        songs = new ArrayList<Song>();
+//        if (getArguments() != null) {
+//            songs = (ArrayList<Song>)getArguments().getSerializable("songs");
+//        }
     }
 
     @Override

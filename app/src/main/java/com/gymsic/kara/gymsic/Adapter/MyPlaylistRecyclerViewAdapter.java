@@ -57,6 +57,7 @@ public class MyPlaylistRecyclerViewAdapter extends RecyclerView.Adapter<MyPlayli
 
     @Override
     public int getItemCount() {
+
         return mSongs.size();
     }
 

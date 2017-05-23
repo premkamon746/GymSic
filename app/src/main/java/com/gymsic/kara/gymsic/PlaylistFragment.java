@@ -39,9 +39,24 @@ public class PlaylistFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+
+    public void setSongs(ArrayList<Song> songs) {
+        this.songs = songs;
+    }
+
     ArrayList<Song> songs;
     //Player player = new Player();
     MediaPlayer  mediaPlayer;
+
+    private int getCurrentSong() {
+        return ++currentSong;
+    }
+
+    private void setCurrentSong(int currentSong) {
+        this.currentSong = currentSong;
+    }
+
+    int currentSong = 0;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -53,19 +68,19 @@ public class PlaylistFragment extends Fragment {
     @SuppressWarnings("unused")
     public static PlaylistFragment newInstance(ArrayList<Song> songs) {
         PlaylistFragment fragment = new PlaylistFragment();
-        Bundle args = new Bundle();
-        args.putSerializable("songs", songs);
-        fragment.setArguments(args);
+//        Bundle args = new Bundle();
+//        args.putSerializable("songs", songs);
+//        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            songs = (ArrayList<Song>)getArguments().getSerializable("songs");
-        }
+        songs = new ArrayList<Song>(); //dummy object
+//        if (getArguments() != null) {
+//            songs = (ArrayList<Song>)getArguments().getSerializable("songs");
+//        }
     }
 
     public void setMediaPlayer(MediaPlayer  mediaPlayer){
@@ -85,17 +100,17 @@ public class PlaylistFragment extends Fragment {
             recyclerView.addOnItemTouchListener(
                     new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
                         @Override public void onItemClick(View view,final int position) {
-                            Log.d("log position player ","position : "+position);
-                            String song = getActivity().getExternalCacheDir()+ "/gymsic/"+songs.get(position).getFilename();
-
-                            //player.play(song);
-
+                            //Log.d("log position player ","position : "+position);
+                            //String song = getActivity().getExternalCacheDir()+ "/gymsic/"+songs.get(position).getFilename();
+                            setCurrentSong(position);
                             playSong(mediaPlayer,position);
-
+                            //int songIndex = position;
                             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
+
                                 @Override
                                 public void onCompletion(MediaPlayer mp) {
-                                    playSong(mp,position+1);
+                                    int position = getCurrentSong();
+                                    playSong(mp ,position);
                                 }
                             });
 
@@ -112,8 +127,12 @@ public class PlaylistFragment extends Fragment {
     }
 
     public void playSong(MediaPlayer mp, int position){
+        Log.d("log position player ",songs.size()+ " : "+position);
         if(songs.size() > position) {
-            String song = getActivity().getExternalCacheDir() + "/gymsic/" + songs.get(position).getFilename();
+            String songFileName = songs.get(position).getFilename();
+            File dir = getActivity().getExternalFilesDir("music");
+            String song =  dir + songFileName;
+
             File file = new File(song);
             if (file.exists()) {
                 mp.reset();

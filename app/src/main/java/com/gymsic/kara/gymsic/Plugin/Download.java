@@ -74,8 +74,10 @@ public class Download extends AsyncTask<String, Integer, String> {
             InputStream input = new BufferedInputStream(url.openStream(), 8192);
 
 
-            String directory = context.getExternalCacheDir()+ "/gymsic/"+song.getFilename();
-            File folder = new File(context.getExternalCacheDir(), "gymsic");
+            File directory = context.getExternalFilesDir("music");
+
+            //String directory = context.getExternalCacheDir()+ "/music/"+song.getFilename();
+            File folder = new File(directory, "music");
             if (!folder.exists()) {
                 boolean success = folder.mkdir();
                 if (success) {
@@ -89,7 +91,7 @@ public class Download extends AsyncTask<String, Integer, String> {
                 Log.d("debug","file already exits.");
             }
 
-            OutputStream output = new FileOutputStream(directory);
+            OutputStream output = new FileOutputStream(directory+song.getFilename());
 
 
             byte data[] = new byte[1024];

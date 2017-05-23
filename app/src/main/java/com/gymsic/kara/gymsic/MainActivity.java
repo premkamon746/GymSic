@@ -45,11 +45,13 @@ public class MainActivity extends AppCompatActivity
 
     OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    public String server = "http://192.168.1.33:3000/";
+    public String server = "http://192.168.1.153:3000/";
     private TextView playlistHead;
     MediaPlayer mediaPlayer = new MediaPlayer();
-    final SongFragment songFram =  new SongFragment();;
+    PlaylistFragment playList;
+
     OnRecycleViewClick onRecVwClick;
+    SongFragment songFram;
 
 
 
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity
         playlistHead = (TextView)findViewById(R.id.playList);
         playlistHead.setOnClickListener(this);
 
-        songFram.setOnRecycleViewClick(onRecVwClick);
+
 
 
 
@@ -146,11 +148,21 @@ public class MainActivity extends AppCompatActivity
                 Type listType = new TypeToken<ArrayList<Song>>(){}.getType();
                 ArrayList<Song> songs = gson.fromJson(res, listType);
 
+                if( songFram instanceof  SongFragment){
+
+                }else {
+                    songFram = new SongFragment();
+                }
+
+                songFram.setOnRecycleViewClick(onRecVwClick);
                 songFram.setSong(songs);
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                ft.detach(songFram);
+                ft.attach(songFram);
                 ft.replace(R.id.fragment_place,songFram);
+
                 ft.commit();
                 //Log.d("log_debug","res "+song.get);
             }
@@ -199,16 +211,10 @@ public class MainActivity extends AppCompatActivity
     public void loadDefaultPlayList(){
         Playlist pl = new Playlist(this);
         ArrayList<Song> songs = pl.get();
-
-        final PlaylistFragment b =  PlaylistFragment.newInstance(songs);
-        b.setMediaPlayer(mediaPlayer);
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-        ft.replace(R.id.fragment_playlist,b);
-        ft.commit();
+        startPlaylistFragment(songs);
     }
 
+    // Download song sucess
     public OnTaskComplete setOnDownloadSongSuccess(){
         final LinearLayout layout = (LinearLayout)findViewById(R.id.playListHead);
         //get haft
@@ -226,13 +232,9 @@ public class MainActivity extends AppCompatActivity
                 songs.add(song);
                 pl.set(songs);
 
+                songs = pl.get();
                 layout.getLayoutParams().height = heightDp;
-                final PlaylistFragment b =  PlaylistFragment.newInstance(songs);
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-                ft.replace(R.id.fragment_playlist,b);
-                ft.commit();
+                startPlaylistFragment(songs);
             }
         };
 
@@ -244,9 +246,28 @@ public class MainActivity extends AppCompatActivity
                 public void onRecycleViewClick(View view,int position,ArrayList<Song> songs){
                     ProgressBar pb = (ProgressBar)view.findViewById(R.id.progressBar);
                     OnTaskComplete cmp = setOnDownloadSongSuccess();
-                    new Download(MainActivity.this,pb,songs.get(position),cmp).execute("http://192.168.1.33/mp3db/"+songs.get(position).getFilename());
+                    new Download(MainActivity.this,pb,songs.get(position),cmp).execute("http://192.168.1.153/mp3db/"+songs.get(position).getFilename());
                 }
         };
 
+    }
+
+    private void startPlaylistFragment(ArrayList<Song> songs){
+
+        if(playList instanceof PlaylistFragment){
+
+        }else{
+            playList = new PlaylistFragment();
+        }
+
+        playList.setMediaPlayer(mediaPlayer);
+        playList.setSongs(songs);
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+        ft.detach(playList);
+        ft.attach(playList);
+        ft.replace(R.id.fragment_playlist,playList);
+        ft.commit();
     }
 }
