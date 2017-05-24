@@ -91,7 +91,7 @@ public class PlaylistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_playlist_list, container, false);
-
+        Log.d("log on load ", "onCreateView");
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();

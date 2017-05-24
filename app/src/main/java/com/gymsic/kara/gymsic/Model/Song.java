@@ -13,7 +13,7 @@ public class Song implements Serializable {
     private String duration;
     private String filename;
     private String cover;
-    private String sort;
+    private int sort;
 
 
 
@@ -64,11 +64,11 @@ public class Song implements Serializable {
         this.cover = cover;
     }
 
-    public String getSort() {
+    public int getSort() {
         return sort;
     }
 
-    public void setSort(String sort) {
+    public void setSort(int sort) {
         this.sort = sort;
     }
 }
