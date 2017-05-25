@@ -80,13 +80,18 @@ public class SongFragment extends Fragment {
             final int heightDp = getResources().getDisplayMetrics().heightPixels / 2;
 
             recyclerView.addOnItemTouchListener(
-                    new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
+                    new RecyclerItemClickListener(context, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                         @Override public void onItemClick(View view, int position) {
                             // TODO Handle item click
 
                             onRecVwClick.onRecycleViewClick(view,position,songs);
 
                             //Log.d("position click : ", songs.get(position).getFilename());
+                        }
+
+                        @Override
+                        public void onItemLongClick(View view, int position) {
+
                         }
                     })
             );

@@ -11,8 +11,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 
 import com.gymsic.kara.gymsic.Adapter.MyPlaylistRecyclerViewAdapter;
@@ -98,7 +100,7 @@ public class PlaylistFragment extends Fragment {
             RecyclerView recyclerView = (RecyclerView) view;
 
             recyclerView.addOnItemTouchListener(
-                    new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
+                    new RecyclerItemClickListener(context, recyclerView,new RecyclerItemClickListener.OnItemClickListener() {
                         @Override public void onItemClick(View view,final int position) {
                             //Log.d("log position player ","position : "+position);
                             //String song = getActivity().getExternalCacheDir()+ "/gymsic/"+songs.get(position).getFilename();
@@ -117,8 +119,16 @@ public class PlaylistFragment extends Fragment {
 
 
                         }
+
+                        @Override
+                        public void onItemLongClick(View view, int position) {
+                        }
+
+
                     })
             );
+
+
 
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             recyclerView.setAdapter(new MyPlaylistRecyclerViewAdapter(songs, mListener));
