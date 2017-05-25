@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity
 
     OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    public String server = "http://192.168.1.153:3000/";
+    public String server = "http://192.168.1.33:3000/";
     private TextView playlistHead;
     MediaPlayer mediaPlayer = new MediaPlayer();
     PlaylistFragment playList;
@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity
                 public void onRecycleViewClick(View view,int position,ArrayList<Song> songs){
                     ProgressBar pb = (ProgressBar)view.findViewById(R.id.progressBar);
                     OnTaskComplete cmp = setOnDownloadSongSuccess();
-                    new Download(MainActivity.this,pb,songs.get(position),cmp).execute("http://192.168.1.153/mp3db/"+songs.get(position).getFilename());
+                    new Download(MainActivity.this,pb,songs.get(position),cmp).execute("http://192.168.1.33/mp3db/"+songs.get(position).getFilename());
                 }
         };
 
