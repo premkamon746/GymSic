@@ -10,6 +10,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -94,6 +95,8 @@ public class PlaylistFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_playlist_list, container, false);
         Log.d("log on load ", "onCreateView");
+
+
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
