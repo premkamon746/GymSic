@@ -68,16 +68,14 @@ public class SongFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
          View view = inflater.inflate(R.layout.fragment_song_list, container, false);
+
 
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            final LinearLayout layout = (LinearLayout)getActivity().findViewById(R.id.playListHead);
-
-            //get haft
-            final int heightDp = getResources().getDisplayMetrics().heightPixels / 2;
 
             recyclerView.addOnItemTouchListener(
                     new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {

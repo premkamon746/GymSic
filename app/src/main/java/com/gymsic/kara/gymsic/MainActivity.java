@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity
 
     OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    public String server = "http://192.168.1.33:3000/";
+    public String server = "http://192.168.1.153:3000/";
     private TextView playlistHead;
     MediaPlayer mediaPlayer = new MediaPlayer();
     PlaylistFragment playList;
@@ -188,16 +189,16 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.playList){
-            final LinearLayout layout = (LinearLayout)findViewById(R.id.playListHead);
-            LayoutParams params = layout.getLayoutParams();
-            int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
-            if(params.height >height) {
-                params.height = height;
-            }else{
-                int heightDp = getResources().getDisplayMetrics().heightPixels / 2;
-                params.height = heightDp;
-            }
-            layout.setLayoutParams(params);
+//            final LinearLayout layout = (LinearLayout)findViewById(R.id.playListHead);
+//            LayoutParams params = layout.getLayoutParams();
+//            int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
+//            if(params.height >height) {
+//                params.height = height;
+//            }else{
+//                int heightDp = getResources().getDisplayMetrics().heightPixels / 2;
+//                params.height = heightDp;
+//            }
+//            layout.setLayoutParams(params);
         }
     }
 
@@ -205,21 +206,21 @@ public class MainActivity extends AppCompatActivity
     public void loadDefaultData(){
         //cmp = setOnDownloadSongSuccess();
         onRecVwClick = setOnSearchClick();
-        loadDefaultPlayList();
+        //loadDefaultPlayList();
     }
 
     public void loadDefaultPlayList(){
         Playlist pl = new Playlist(this);
         ArrayList<Song> songs = pl.get();
         Log.d("song length",songs.size()+"");
-        startPlaylistFragment(songs);
+        //startPlaylistFragment(songs);
     }
 
     // Download song sucess
     public OnTaskComplete setOnDownloadSongSuccess(){
-        final LinearLayout layout = (LinearLayout)findViewById(R.id.playListHead);
+        //final LinearLayout layout = (LinearLayout)findViewById(R.id.playListHead);
         //get haft
-        final int heightDp = getResources().getDisplayMetrics().heightPixels / 2;
+        //final int heightDp = getResources().getDisplayMetrics().heightPixels / 2;
 
         return new OnTaskComplete() {
             @Override
@@ -227,7 +228,7 @@ public class MainActivity extends AppCompatActivity
                 Playlist pl = new Playlist(MainActivity.this);
                 pl.set(song);
                 ArrayList<Song> songs  = pl.get();
-                layout.getLayoutParams().height = heightDp;
+                //layout.getLayoutParams().height = heightDp;
                 startPlaylistFragment(songs);
             }
         };
@@ -240,7 +241,7 @@ public class MainActivity extends AppCompatActivity
                 public void onRecycleViewClick(View view,int position,ArrayList<Song> songs){
                     ProgressBar pb = (ProgressBar)view.findViewById(R.id.progressBar);
                     OnTaskComplete cmp = setOnDownloadSongSuccess();
-                    new Download(MainActivity.this,pb,songs.get(position),cmp).execute("http://192.168.1.33/mp3db/"+songs.get(position).getFilename());
+                    new Download(MainActivity.this,pb,songs.get(position),cmp).execute("http://192.168.1.153/mp3db/"+songs.get(position).getFilename());
                 }
         };
 
@@ -253,15 +254,28 @@ public class MainActivity extends AppCompatActivity
         }else{
             playList = new PlaylistFragment();
         }
-        //Log.d("log on load ", songs.get(0).getArtist());
+        Log.d("log on load ", "add fragment");
         playList.setMediaPlayer(mediaPlayer);
         playList.setSongs(songs);
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+        //ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+        ft.setCustomAnimations(R.animator.slide_up, R.animator.slide_down);
+        ft.addToBackStack(null);
         ft.detach(playList);
         ft.attach(playList);
         ft.replace(R.id.fragment_playlist,playList);
+        ft.show(playList);
         ft.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().beginTransaction().hide(playList).commit();
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }
