@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/item_search"
+        android:enabled="true"
+        android:icon="@drawable/search48"
+        android:title="@string/search_song"/>
+    <item
+        android:id="@+id/item_player"
+        android:enabled="true"
+        android:icon="@drawable/playlist48"
+        android:title="@string/queue_song"/>
+    <item
+        android:id="@+id/item_mysong"
+        android:enabled="true"
+        android:icon="@drawable/mysong48"
+        android:title="@string/my_song"/>
+
+</menu>

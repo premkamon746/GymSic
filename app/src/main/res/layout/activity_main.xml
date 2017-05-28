@@ -29,37 +29,12 @@
         <RelativeLayout
             android:id="@+id/fragment_place"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:paddingBottom="80dp"/>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/playListHead"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical">
 
-
-        <TextView
-            android:id="@+id/playList"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@color/colorGray"
-            android:color="@color/colorText"
-            android:gravity="center"
-            android:text="@string/play_list"
-            android:visibility="invisible"/>
-
-
-        <Button
-            android:id="@+id/createPlaylist"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/create_play_list"
-            android:visibility="invisible"/>
-        <!--android:text="@string/create_play_list"-->
 
     <RelativeLayout
         android:id="@+id/fragment_playlist"
@@ -69,9 +44,13 @@
         android:background="@drawable/selector_row"/>
 
 
-
-    </LinearLayout>
-
-
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bottom_nav_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:itemBackground="@color/colorPrimary"
+        app:itemIconTint="@android:color/white"
+        app:itemTextColor="@android:color/white"/>
 
 </RelativeLayout>

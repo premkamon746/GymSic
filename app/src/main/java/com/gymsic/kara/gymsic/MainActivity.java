@@ -5,11 +5,15 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -41,12 +45,11 @@ import okhttp3.Response;
 import android.view.ViewGroup.LayoutParams;
 
 public class MainActivity extends AppCompatActivity
-        implements SongFragment.OnListFragmentInteractionListener
-        , View.OnClickListener{
+        implements SongFragment.OnListFragmentInteractionListener{
 
     OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    public String server = "http://192.168.1.153:3000/";
+    public String server = "http://192.168.1.33:3000/";
     private TextView playlistHead;
     MediaPlayer mediaPlayer = new MediaPlayer();
     PlaylistFragment playList;
@@ -62,8 +65,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         loadDefaultData();
-        playlistHead = (TextView)findViewById(R.id.playList);
-        playlistHead.setOnClickListener(this);
+        //playlistHead = (TextView)findViewById(R.id.playList);
+        //playlistHead.setOnClickListener(this);
 
 
 
@@ -85,6 +88,38 @@ public class MainActivity extends AppCompatActivity
                 return false;
             }
         });
+
+        final BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav_view);
+
+        bottomNavigationView.inflateMenu(R.menu.bottom_menu);
+        bottomNavigationView.setItemBackgroundResource(R.color.colorPrimary);
+
+//        bottomNavigationView.setItemTextColor(ContextCompat.getColorStateList(this, R.color.colorAccent));
+//        bottomNavigationView.setItemIconTintList(ContextCompat.getColorStateList(this, R.color.colorGray));
+//
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem item) {
+
+                        item.setChecked(true);
+
+                        switch (item.getItemId()) {
+                            case R.id.item_search:
+                                getFragmentManager().beginTransaction().show(playList).commit();
+                                break;
+                            case R.id.item_player:
+                                // do this event
+                                break;
+                            case R.id.item_mysong:
+                                // do this event
+                                break;
+                        }
+                        return false;
+                    }
+                });
+
 
 
 
@@ -186,34 +221,20 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    @Override
-    public void onClick(View v) {
-        if(v.getId() == R.id.playList){
-//            final LinearLayout layout = (LinearLayout)findViewById(R.id.playListHead);
-//            LayoutParams params = layout.getLayoutParams();
-//            int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
-//            if(params.height >height) {
-//                params.height = height;
-//            }else{
-//                int heightDp = getResources().getDisplayMetrics().heightPixels / 2;
-//                params.height = heightDp;
-//            }
-//            layout.setLayoutParams(params);
-        }
-    }
+
 
 
     public void loadDefaultData(){
         //cmp = setOnDownloadSongSuccess();
         onRecVwClick = setOnSearchClick();
-        //loadDefaultPlayList();
+        loadDefaultPlayList();
     }
 
     public void loadDefaultPlayList(){
         Playlist pl = new Playlist(this);
         ArrayList<Song> songs = pl.get();
         Log.d("song length",songs.size()+"");
-        //startPlaylistFragment(songs);
+        startPlaylistFragment(songs);
     }
 
     // Download song sucess
@@ -241,7 +262,7 @@ public class MainActivity extends AppCompatActivity
                 public void onRecycleViewClick(View view,int position,ArrayList<Song> songs){
                     ProgressBar pb = (ProgressBar)view.findViewById(R.id.progressBar);
                     OnTaskComplete cmp = setOnDownloadSongSuccess();
-                    new Download(MainActivity.this,pb,songs.get(position),cmp).execute("http://192.168.1.153/mp3db/"+songs.get(position).getFilename());
+                    new Download(MainActivity.this,pb,songs.get(position),cmp).execute("http://192.168.1.33/mp3db/"+songs.get(position).getFilename());
                 }
         };
 
@@ -278,4 +299,6 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
+
 }

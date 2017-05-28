@@ -8,10 +8,14 @@
 
     <!-- set menu name -->
     <string name="my_song">เพลงของฉัน</string>
-    <string name="hot_song">เพลงฮิต</string>
+    <string name="queue_song">คิวเพลง</string>
+    <string name="search_song">ค้นหาเพลง</string>
     <string name="top_singer">คะแนนสูงสุด</string>
 
 
     <string name="play_list">รายการเพลง</string>
     <string name="create_play_list">สร้างรายการเพลง</string>
+
+
+
 </resources>
