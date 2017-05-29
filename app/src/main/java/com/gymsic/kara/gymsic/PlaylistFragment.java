@@ -97,6 +97,10 @@ public class PlaylistFragment extends Fragment {
                         @Override public void onItemClick(View view,final int position) {
                             //Log.d("log position player ","position : "+position);
                             //String song = getActivity().getExternalCacheDir()+ "/gymsic/"+songs.get(position).getFilename();
+
+                            FragmentManager manager = getFragmentManager();
+                            manager.beginTransaction().replace(R.id.fragment_bottom_view, new PlayerFragment()).commit();
+
                             setCurrentSong(position);
                             playSong(mediaPlayer,position);
                             //int songIndex = position;

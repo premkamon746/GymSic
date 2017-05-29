@@ -92,7 +92,7 @@ public class SongFragment extends Fragment {
                                     pl.set(song);
                                 }
                             };
-                            new Download(getActivity(),pb,songs.get(position),cmp).execute("http://192.168.1.153/mp3db/"+songs.get(position).getFilename());
+                            new Download(getActivity(),pb,songs.get(position),cmp).execute("http://192.168.1.33/mp3db/"+songs.get(position).getFilename());
                         }
 
                         @Override

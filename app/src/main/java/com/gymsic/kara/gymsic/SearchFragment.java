@@ -41,14 +41,12 @@ public class SearchFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     SongFragment songFram;
-    OnRecycleViewClick onRecycleClick;
     OnServerDataComplete servCompl;
     //public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    public String server = "http://192.168.1.153:3000/";
+    public String server = "http://192.168.1.33:3000/";
 
     public SearchFragment() {
         // Required empty public constructor
-        onRecycleClick = setOnSearchClick();
         servCompl = setOnServerComplete();
     }
 
@@ -87,16 +85,12 @@ public class SearchFragment extends Fragment {
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                if( songFram instanceof SongFragment){
-
-                }else {
-                    songFram = new SongFragment();
-                }
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-                ft.remove(songFram);
-                ft.commit();
+                SongFragment songFram = new SongFragment();
+                getFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                .remove(songFram)
+                .commit();
                 return true;
             }
         });
@@ -138,42 +132,18 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
-    public OnRecycleViewClick setOnSearchClick(){
-        return new OnRecycleViewClick(){
-            @Override
-            public void onRecycleViewClick(View view,int position,ArrayList<Song> songs){
-                ProgressBar pb = (ProgressBar)view.findViewById(R.id.progressBar);
-                OnTaskComplete cmp = new OnTaskComplete() {
-                    @Override
-                    public void onTaskCompleted(Song song) {
-                        Playlist pl = new Playlist(getActivity());
-                        pl.set(song);
-                    }
-                };
-                new Download(getActivity(),pb,songs.get(position),cmp).execute("http://192.168.1.153/mp3db/"+songs.get(position).getFilename());
-            }
-        };
 
-    }
 
     public OnServerDataComplete setOnServerComplete(){
         return new OnServerDataComplete(){
             @Override
             public void onServerDataComplete(ArrayList<Song> songs){
-                if( songFram instanceof  SongFragment){
-
-                }else {
-                    songFram = new SongFragment();
-                }
+                SongFragment songFram = new SongFragment();
                 songFram.setSong(songs);
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-                ft.detach(songFram);
-                ft.attach(songFram);
-                ft.replace(R.id.auto_complete_place,songFram);
-
-                ft.commit();
+                getFragmentManager().beginTransaction()
+                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                .replace(R.id.auto_complete_place,songFram)
+                .commit();
             }
         };
 

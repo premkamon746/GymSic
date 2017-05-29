@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity
 
         pl = new Playlist(MainActivity.this);
         startSearchPage();
+
+        //mediaPlayer.setVolume(0,100);
         //startPlaylistFragment(pl.get());
 
         final BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav_view);
