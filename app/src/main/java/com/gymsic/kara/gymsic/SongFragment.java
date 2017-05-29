@@ -10,11 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.gymsic.kara.gymsic.Adapter.MySongRecyclerViewAdapter;
 import com.gymsic.kara.gymsic.Interface.OnRecycleViewClick;
+import com.gymsic.kara.gymsic.Interface.OnTaskComplete;
 import com.gymsic.kara.gymsic.Model.Song;
 import com.gymsic.kara.gymsic.Listener.RecyclerItemClickListener;
+import com.gymsic.kara.gymsic.Plugin.Download;
+import com.gymsic.kara.gymsic.Plugin.Playlist;
 
 import java.util.ArrayList;
 
@@ -28,7 +32,6 @@ public class SongFragment extends Fragment {
 
     private OnListFragmentInteractionListener mListener;
     ArrayList<Song> songs;
-    OnRecycleViewClick onRecVwClick;
 
 
     /**
@@ -48,9 +51,7 @@ public class SongFragment extends Fragment {
         return fragment;
     }
 
-    public void setOnRecycleViewClick(OnRecycleViewClick onRecVwClick){
-        this.onRecVwClick =  onRecVwClick;
-    }
+
 
     public void setSong(ArrayList<Song> songs){
         this.songs =  songs;
@@ -81,10 +82,17 @@ public class SongFragment extends Fragment {
                     new RecyclerItemClickListener(context, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                         @Override public void onItemClick(View view, int position) {
                             // TODO Handle item click
-
-                            onRecVwClick.onRecycleViewClick(view,position,songs);
-
+                            //onRecVwClick.onRecycleViewClick(view,position,songs);
                             //Log.d("position click : ", songs.get(position).getFilename());
+                            ProgressBar pb = (ProgressBar)view.findViewById(R.id.progressBar);
+                            OnTaskComplete cmp = new OnTaskComplete() {
+                                @Override
+                                public void onTaskCompleted(Song song) {
+                                    Playlist pl = new Playlist(getActivity());
+                                    pl.set(song);
+                                }
+                            };
+                            new Download(getActivity(),pb,songs.get(position),cmp).execute("http://192.168.1.153/mp3db/"+songs.get(position).getFilename());
                         }
 
                         @Override
@@ -110,12 +118,12 @@ public class SongFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
+//        if (context instanceof OnListFragmentInteractionListener) {
+//            mListener = (OnListFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnListFragmentInteractionListener");
+//        }
     }
 
     @Override

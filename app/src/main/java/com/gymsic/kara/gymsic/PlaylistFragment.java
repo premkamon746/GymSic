@@ -41,7 +41,6 @@ public class PlaylistFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     // TODO: Customize parameters
-    private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
     public void setSongs(ArrayList<Song> songs) {
@@ -70,21 +69,14 @@ public class PlaylistFragment extends Fragment {
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static PlaylistFragment newInstance(ArrayList<Song> songs) {
+    public static PlaylistFragment newInstance() {
         PlaylistFragment fragment = new PlaylistFragment();
-//        Bundle args = new Bundle();
-//        args.putSerializable("songs", songs);
-//        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //songs = new ArrayList<Song>(); //dummy object
-//        if (getArguments() != null) {
-//            songs = (ArrayList<Song>)getArguments().getSerializable("songs");
-//        }
     }
 
     public void setMediaPlayer(MediaPlayer  mediaPlayer){
@@ -95,10 +87,7 @@ public class PlaylistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_playlist_list, container, false);
-        Log.d("log on load ", "onCreateView");
 
-
-        // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
@@ -119,9 +108,6 @@ public class PlaylistFragment extends Fragment {
                                     playSong(mp ,position);
                                 }
                             });
-
-
-
                         }
 
                         @Override
