@@ -20,6 +20,7 @@ import android.widget.CheckBox;
 import android.widget.ProgressBar;
 
 import com.gymsic.kara.gymsic.Adapter.MyPlaylistRecyclerViewAdapter;
+import com.gymsic.kara.gymsic.Interface.OnRecycleViewClick;
 import com.gymsic.kara.gymsic.Interface.OnTaskComplete;
 import com.gymsic.kara.gymsic.Listener.RecyclerItemClickListener;
 import com.gymsic.kara.gymsic.Model.Song;
@@ -50,16 +51,11 @@ public class PlaylistFragment extends Fragment {
     ArrayList<Song> songs;
     //Player player = new Player();
     MediaPlayer  mediaPlayer;
+    OnRecycleViewClick onRecycleViewClick;
 
-    private int getCurrentSong() {
-        return ++currentSong;
-    }
 
-    private void setCurrentSong(int currentSong) {
-        this.currentSong = currentSong;
-    }
 
-    int currentSong = 0;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -72,6 +68,10 @@ public class PlaylistFragment extends Fragment {
     public static PlaylistFragment newInstance() {
         PlaylistFragment fragment = new PlaylistFragment();
         return fragment;
+    }
+
+    public void setOnClickListener(OnRecycleViewClick onRecycleViewClick){
+        this.onRecycleViewClick =  onRecycleViewClick;
     }
 
     @Override
@@ -88,30 +88,16 @@ public class PlaylistFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_playlist_list, container, false);
 
-        if (view instanceof RecyclerView) {
+
+        //if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycleview_playlist);
 
             recyclerView.addOnItemTouchListener(
                     new RecyclerItemClickListener(context, recyclerView,new RecyclerItemClickListener.OnItemClickListener() {
                         @Override public void onItemClick(View view,final int position) {
-                            //Log.d("log position player ","position : "+position);
-                            //String song = getActivity().getExternalCacheDir()+ "/gymsic/"+songs.get(position).getFilename();
+                            onRecycleViewClick.onRecycleViewClick(view, position, songs);
 
-                            FragmentManager manager = getFragmentManager();
-                            manager.beginTransaction().replace(R.id.fragment_bottom_view, new PlayerFragment()).commit();
-
-                            setCurrentSong(position);
-                            playSong(mediaPlayer,position);
-                            //int songIndex = position;
-                            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
-
-                                @Override
-                                public void onCompletion(MediaPlayer mp) {
-                                    int position = getCurrentSong();
-                                    playSong(mp ,position);
-                                }
-                            });
                         }
 
                         @Override
@@ -130,38 +116,11 @@ public class PlaylistFragment extends Fragment {
                     layoutManager.getOrientation());
             recyclerView.addItemDecoration(dividerItemDecoration);
             recyclerView.setAdapter(new MyPlaylistRecyclerViewAdapter(songs, mListener));
-        }
+        //}
         return view;
     }
 
-    public void playSong(MediaPlayer mp, int position){
-        Log.d("log position player ",songs.size()+ " : "+position);
-        if(songs.size() > position) {
-            String songFileName = songs.get(position).getFilename();
-            File dir = getActivity().getExternalFilesDir("music");
-            String song =  dir + songFileName;
 
-            File file = new File(song);
-            if (file.exists()) {
-                mp.reset();
-                try {
-                    mp.setDataSource(song);
-                    mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-
-                            mp.start();
-                        }
-                    });
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                mp.prepareAsync();
-
-            }
-        }
-    }
 
 
     @Override

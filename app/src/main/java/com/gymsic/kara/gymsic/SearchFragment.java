@@ -43,7 +43,7 @@ public class SearchFragment extends Fragment {
     SongFragment songFram;
     OnServerDataComplete servCompl;
     //public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    public String server = "http://192.168.1.33:3000/";
+    public String server = "http://192.168.1.153:3000/";
 
     public SearchFragment() {
         // Required empty public constructor
