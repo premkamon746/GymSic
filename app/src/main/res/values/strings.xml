@@ -7,6 +7,7 @@
 
 
     <!-- set menu name -->
+    <string name="record_song">ทดสอบเสียงร้อง</string>
     <string name="my_song">เพลงของฉัน</string>
     <string name="queue_song">คิวเพลง</string>
     <string name="search_song">ค้นหาเพลง</string>
@@ -16,5 +17,19 @@
     <string name="play_list">รายการเพลง</string>
     <string name="create_play_list">สร้างรายการเพลง</string>
 
+    <!-- set record page -->
+    <string name="recording">กำลังบันทึก...</string>
+    <string name="playing">กำลังเล่น...</string>
 
+    <string name="facebook_app_id">211474989230282</string>
+    <string name="fb_login_protocol_scheme">fb211474989230282</string>
+
+    <string name="logout">logout</string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
 </resources>
